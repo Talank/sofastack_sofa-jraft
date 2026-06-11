@@ -1,10 +1,7 @@
 name: build
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  workflow_dispatch:
 
 jobs:
   check_format:
@@ -17,9 +14,10 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Check format
-        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-          && sh ./tools/check_format.sh
+        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V && sh ./tools/check_format.sh
 
+    strategy:
+      fail-fast: false
   test_jraft_core:
     needs: check_format
     runs-on: ubuntu-latest
@@ -31,11 +29,11 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Maven Test
-        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-          && (mvn --projects jraft-core test
-            || mvn --projects jraft-core test
-            || mvn --projects jraft-core test)
+        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V && (mvn --projects jraft-core test || 
+          mvn --projects jraft-core test || mvn --projects jraft-core test)
 
+    strategy:
+      fail-fast: false
   test_rheakv_core:
     needs: check_format
     runs-on: ubuntu-latest
@@ -47,11 +45,12 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Maven Test
-        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-          && (mvn --projects jraft-rheakv/rheakv-core test
-            || mvn --projects jraft-rheakv/rheakv-core test
-            || mvn --projects jraft-rheakv/rheakv-core test)
+        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V && (mvn --projects 
+          jraft-rheakv/rheakv-core test || mvn --projects jraft-rheakv/rheakv-core test || mvn --projects 
+          jraft-rheakv/rheakv-core test)
 
+    strategy:
+      fail-fast: false
   test_rheakv_pd:
     needs: check_format
     runs-on: ubuntu-latest
@@ -63,11 +62,12 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Maven Test
-        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-          && (mvn --projects jraft-rheakv/rheakv-pd test
-            || mvn --projects jraft-rheakv/rheakv-pd test
-            || mvn --projects jraft-rheakv/rheakv-pd test)
+        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V && (mvn --projects 
+          jraft-rheakv/rheakv-pd test || mvn --projects jraft-rheakv/rheakv-pd test || mvn --projects 
+          jraft-rheakv/rheakv-pd test)
 
+    strategy:
+      fail-fast: false
   test_rpc_grpc_impl:
     needs: check_format
     runs-on: ubuntu-latest
@@ -79,7 +79,8 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Maven Test
-        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-          && (mvn --projects jraft-extension/rpc-grpc-impl test
-            || mvn --projects jraft-extension/rpc-grpc-impl test
-            || mvn --projects jraft-extension/rpc-grpc-impl test)
+        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V && (mvn --projects 
+          jraft-extension/rpc-grpc-impl test || mvn --projects jraft-extension/rpc-grpc-impl test || mvn --projects 
+          jraft-extension/rpc-grpc-impl test)
+    strategy:
+      fail-fast: false
