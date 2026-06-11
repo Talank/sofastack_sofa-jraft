@@ -1,14 +1,11 @@
 name: build
 
 on:
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+  workflow_dispatch:
 
 jobs:
   check_format:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 17
@@ -17,12 +14,18 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Check format
-        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-          && sh ./tools/check_format.sh
+        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V && sh ./tools/check_format.sh
 
+    strategy:
+      matrix:
+        os: &id001
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+      fail-fast: false
   test_jraft_core:
     needs: check_format
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 17
@@ -31,14 +34,16 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Maven Test
-        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-          && (mvn --projects jraft-core test
-            || mvn --projects jraft-core test
-            || mvn --projects jraft-core test)
+        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V && (mvn --projects jraft-core test || 
+          mvn --projects jraft-core test || mvn --projects jraft-core test)
 
+    strategy:
+      matrix:
+        os: *id001
+      fail-fast: false
   test_rheakv_core:
     needs: check_format
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 17
@@ -47,14 +52,17 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Maven Test
-        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-          && (mvn --projects jraft-rheakv/rheakv-core test
-            || mvn --projects jraft-rheakv/rheakv-core test
-            || mvn --projects jraft-rheakv/rheakv-core test)
+        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V && (mvn --projects 
+          jraft-rheakv/rheakv-core test || mvn --projects jraft-rheakv/rheakv-core test || mvn --projects 
+          jraft-rheakv/rheakv-core test)
 
+    strategy:
+      matrix:
+        os: *id001
+      fail-fast: false
   test_rheakv_pd:
     needs: check_format
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 17
@@ -63,14 +71,17 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Maven Test
-        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-          && (mvn --projects jraft-rheakv/rheakv-pd test
-            || mvn --projects jraft-rheakv/rheakv-pd test
-            || mvn --projects jraft-rheakv/rheakv-pd test)
+        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V && (mvn --projects 
+          jraft-rheakv/rheakv-pd test || mvn --projects jraft-rheakv/rheakv-pd test || mvn --projects 
+          jraft-rheakv/rheakv-pd test)
 
+    strategy:
+      matrix:
+        os: *id001
+      fail-fast: false
   test_rpc_grpc_impl:
     needs: check_format
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 17
@@ -79,7 +90,10 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Maven Test
-        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-          && (mvn --projects jraft-extension/rpc-grpc-impl test
-            || mvn --projects jraft-extension/rpc-grpc-impl test
-            || mvn --projects jraft-extension/rpc-grpc-impl test)
+        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V && (mvn --projects 
+          jraft-extension/rpc-grpc-impl test || mvn --projects jraft-extension/rpc-grpc-impl test || mvn --projects 
+          jraft-extension/rpc-grpc-impl test)
+    strategy:
+      matrix:
+        os: *id001
+      fail-fast: false
