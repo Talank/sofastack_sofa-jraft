@@ -14,12 +14,8 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Check format
-        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-        shell: bash
-      - name: Check format script
-        if: runner.os != 'Windows'
-        run: sh ./tools/check_format.sh
-        shell: bash
+        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V && sh ./tools/check_format.sh
+
     strategy:
       matrix:
         os: &id001
