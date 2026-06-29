@@ -14,8 +14,9 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Check format
-        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V && sh ./tools/check_format.sh
-
+        env:
+          MAVEN_OPTS: "-DskipTests=true -Dmaven.javadoc.skip=true"
+        run: mvn clean install -B -V && sh ./tools/check_format.sh
     strategy:
       matrix:
         os: &id001
@@ -34,9 +35,10 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Maven Test
-        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V && (mvn --projects jraft-core test || 
+        env:
+          MAVEN_OPTS: "-DskipTests=true -Dmaven.javadoc.skip=true"
+        run: mvn clean install -B -V && (mvn --projects jraft-core test ||
           mvn --projects jraft-core test || mvn --projects jraft-core test)
-
     strategy:
       matrix:
         os: *id001
@@ -52,10 +54,11 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Maven Test
-        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V && (mvn --projects 
-          jraft-rheakv/rheakv-core test || mvn --projects jraft-rheakv/rheakv-core test || mvn --projects 
+        env:
+          MAVEN_OPTS: "-DskipTests=true -Dmaven.javadoc.skip=true"
+        run: mvn clean install -B -V && (mvn --projects
+          jraft-rheakv/rheakv-core test || mvn --projects jraft-rheakv/rheakv-core test || mvn --projects
           jraft-rheakv/rheakv-core test)
-
     strategy:
       matrix:
         os: *id001
@@ -71,10 +74,11 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Maven Test
-        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V && (mvn --projects 
-          jraft-rheakv/rheakv-pd test || mvn --projects jraft-rheakv/rheakv-pd test || mvn --projects 
+        env:
+          MAVEN_OPTS: "-DskipTests=true -Dmaven.javadoc.skip=true"
+        run: mvn clean install -B -V && (mvn --projects
+          jraft-rheakv/rheakv-pd test || mvn --projects jraft-rheakv/rheakv-pd test || mvn --projects
           jraft-rheakv/rheakv-pd test)
-
     strategy:
       matrix:
         os: *id001
@@ -90,8 +94,10 @@ jobs:
           distribution: temurin
           java-version: 17
       - name: Maven Test
-        run: mvn clean install -DskipTests=true -Dmaven.javadoc.skip=true -B -V && (mvn --projects 
-          jraft-extension/rpc-grpc-impl test || mvn --projects jraft-extension/rpc-grpc-impl test || mvn --projects 
+        env:
+          MAVEN_OPTS: "-DskipTests=true -Dmaven.javadoc.skip=true"
+        run: mvn clean install -B -V && (mvn --projects
+          jraft-extension/rpc-grpc-impl test || mvn --projects jraft-extension/rpc-grpc-impl test || mvn --projects
           jraft-extension/rpc-grpc-impl test)
     strategy:
       matrix:
